@@ -55,6 +55,14 @@ Build Debug locally
 
 Build Release locally
 
+### android deliver_release_to_app_distribution
+
+```sh
+[bundle exec] fastlane android deliver_release_to_app_distribution
+```
+
+Deliver Release to Firebase App Distribution
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

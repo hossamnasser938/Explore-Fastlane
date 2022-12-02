@@ -45,4 +45,15 @@ platform :android do
   lane :build_release_locally do
     gradle(task: "clean assembleRelease")
   end
+
+  desc "Deliver Release to Firebase App Distribution"
+  lane :deliver_release_to_app_distribution do
+    gradle(task: "clean assembleRelease")
+    firebase_app_distribution(
+      app: "1:950714050129:android:fc78ffe99f2037c4853a70",
+      # service_credentials_file: "explore-fastlane-service-account-app-distribution-admin-key.json",
+      firebase_cli_token: "1//03xZPe0i87cU0CgYIARAAGAMSNwF-L9Ird01DLnDBelCu6hh90pqAPYMiRtc-EaByYTJYHHyDLwDYDLC_62oeYW1bmbuFbxYpvU4",
+      groups: "testers",
+    )
+  end
 end
