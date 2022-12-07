@@ -1,6 +1,6 @@
 version: 2.1
 jobs:
-  node:
+  prepare:
     working_directory: ~/project
     docker:
       - image: cimg/node:18.10.0
@@ -86,10 +86,19 @@ jobs:
           path: app/build/outputs/apk/release/app-release.apk
 
 workflows:
-  node-android:
+  node:
     jobs:
-      - node
+      - prepare
+  prepare-android:
+    jobs:
+      - prepare:
+          filters:
+            branches:
+              only: /^v.*/
       - android-build-and-deploy-to-app-distribution:
           requires:
-            - node
-# VS Code Extension Version: 1.3.0
+            - prepare
+          filters:
+            branches:
+              only: /^v.*/
+# VS Code Extension Version: 1.4.0
