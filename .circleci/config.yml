@@ -51,8 +51,10 @@ jobs:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-29-node
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
 
       - attach_workspace:
           at: ~/project
@@ -83,8 +85,11 @@ jobs:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-29-node
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+
       - run:
           name: build android release
           command: |
@@ -96,8 +101,11 @@ jobs:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-29-node
+
     steps:
-      - checkout
+      - checkout:
+          path: ~/project
+
       - run:
           name: build android and deploy to app distribution
           command: |
