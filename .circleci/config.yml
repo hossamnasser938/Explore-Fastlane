@@ -7,8 +7,8 @@ jobs:
       - image: cimg/node:18.10.0
 
     steps:
-      - checkout
-      path: ~/project
+      - checkout:
+          path: ~/project
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
