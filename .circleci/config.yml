@@ -80,20 +80,28 @@ jobs:
           path: test-results
 
   android-build:
-    - run:
-        name: build android release
-        command: |
-          bundle exec fastlane build_release
-    - store_artifacts:
-        path: app/build/outputs/apk/release/app-release.apk
+    working_directory: ~/project/android
+    docker:
+      - image: circleci/android:api-29-node
+    steps:
+      - run:
+          name: build android release
+          command: |
+            bundle exec fastlane build_release
+      - store_artifacts:
+          path: app/build/outputs/apk/release/app-release.apk
 
   android-build-and-deploy-to-app-distribution:
-    - run:
-        name: build android and deploy to app distribution
-        command: |
-          bundle exec fastlane deliver_release_to_app_distribution
-    - store_artifacts:
-        path: app/build/outputs/apk/release/app-release.apk
+    working_directory: ~/project/android
+    docker:
+      - image: circleci/android:api-29-node
+    steps:
+      - run:
+          name: build android and deploy to app distribution
+          command: |
+            bundle exec fastlane deliver_release_to_app_distribution
+      - store_artifacts:
+          path: app/build/outputs/apk/release/app-release.apk
 
 workflows:
   node-prepare-w:
