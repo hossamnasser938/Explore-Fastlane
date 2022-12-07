@@ -155,9 +155,22 @@ workflows:
           filters:
             branches:
               only: /^v.*/
-      - android-build-and-deploy-to-app-distribution:
+      - android-build:
           requires:
             - android-prepare
+          filters:
+            branches:
+              only: /^v.*/
+      - hold:
+          type: approval
+          requires:
+            - android-build
+          filters:
+            branches:
+              only: /^v.*/
+      - android-build-and-deploy-to-app-distribution:
+          requires:
+            - hold
           filters:
             branches:
               only: /^v.*/
