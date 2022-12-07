@@ -113,7 +113,7 @@ workflows:
       - node-prepare:
           filters:
             tags:
-              only: /^BUILD*/
+              only: /^BUILD.*/
             branches:
               ignore: /.*/
       - android-prepare:
@@ -121,7 +121,7 @@ workflows:
             - node-prepare
           filters:
             tags:
-              only: /^BUILD*/
+              only: /^BUILD.*/
             branches:
               ignore: /.*/
       - android-build:
@@ -129,7 +129,7 @@ workflows:
             - android-prepare
           filters:
             tags:
-              only: /^BUILD*/
+              only: /^BUILD.*/
             branches:
               ignore: /.*/
 
