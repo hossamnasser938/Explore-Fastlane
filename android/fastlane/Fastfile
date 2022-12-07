@@ -37,12 +37,12 @@ platform :android do
   end
 
   desc "Build Debug locally"
-  lane :build_debug_locally do
+  lane :build_debug do
     gradle(task: "clean assembleDebug")
   end
 
   desc "Build Release locally"
-  lane :build_release_locally do
+  lane :build_release do
     gradle(task: "clean assembleRelease")
   end
 

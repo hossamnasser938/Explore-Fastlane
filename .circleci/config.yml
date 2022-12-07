@@ -1,6 +1,7 @@
 version: 2.1
+
 jobs:
-  prepare:
+  node-prepare:
     working_directory: ~/project
     docker:
       - image: cimg/node:18.10.0
@@ -45,7 +46,7 @@ jobs:
       - store_artifacts:
           path: test-results
 
-  android-build-and-deploy-to-app-distribution:
+  android-prepare:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-29-node
@@ -78,26 +79,61 @@ jobs:
       - store_artifacts:
           path: test-results
 
-      - run:
-          name: deploy to app distribution
-          command: |
-            bundle exec fastlane deliver_release_to_app_distribution
-      - store_artifacts:
-          path: app/build/outputs/apk/release/app-release.apk
+  android-build:
+    - run:
+        name: build android release
+        command: |
+          bundle exec fastlane build_release
+    - store_artifacts:
+        path: app/build/outputs/apk/release/app-release.apk
+
+  android-build-and-deploy-to-app-distribution:
+    - run:
+        name: build android and deploy to app distribution
+        command: |
+          bundle exec fastlane deliver_release_to_app_distribution
+    - store_artifacts:
+        path: app/build/outputs/apk/release/app-release.apk
 
 workflows:
-  node:
+  node-prepare-w:
     jobs:
-      - prepare
-  prepare-android:
+      - node-prepare
+
+  android-build-w:
     jobs:
-      - prepare:
+      - node-prepare:
+          filters:
+            tags:
+              only: /^BUILD*/
+      - android-prepare:
+          requires:
+            - node-prepare
+          filters:
+            tags:
+              only: /^BUILD*/
+      - android-build:
+          requires:
+            - android-prepare
+          filters:
+            tags:
+              only: /^BUILD*/
+
+  build-deliver-app-distribution-w:
+    jobs:
+      - node-prepare:
+          filters:
+            branches:
+              only: /^v.*/
+      - android-prepare:
+          requires:
+            - node-prepare
           filters:
             branches:
               only: /^v.*/
       - android-build-and-deploy-to-app-distribution:
           requires:
-            - prepare
+            - android-prepare
           filters:
             branches:
               only: /^v.*/
