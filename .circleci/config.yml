@@ -114,18 +114,24 @@ workflows:
           filters:
             tags:
               only: /^BUILD*/
+            branches:
+              ignore: /.*/
       - android-prepare:
           requires:
             - node-prepare
           filters:
             tags:
               only: /^BUILD*/
+            branches:
+              ignore: /.*/
       - android-build:
           requires:
             - android-prepare
           filters:
             tags:
               only: /^BUILD*/
+            branches:
+              ignore: /.*/
 
   build-deliver-app-distribution-w:
     jobs:
