@@ -1,6 +1,14 @@
 apply plugin: "com.android.application"
 apply plugin: 'com.google.gms.google-services'
 
+project.ext.envConfigFiles = [
+        development: ".env.dev",
+        stag: ".env.stag",
+        prod: ".env.prod",
+]
+
+apply from: project(':react-native-config').projectDir.getPath() + "/dotenv.gradle"
+
 import com.android.build.OutputFile
 import org.apache.tools.ant.taskdefs.condition.Os
 
@@ -137,6 +145,7 @@ android {
 
     defaultConfig {
         applicationId "com.explrefastlane"
+        resValue "string", "build_config_package", "com.explrefastlane"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 3
@@ -237,6 +246,24 @@ android {
             signingConfig signingConfigs.release
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
+        }
+    }
+
+    flavorDimensions "default"
+    productFlavors {
+        development {
+            dimension "default"
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "DevExpFLane"
+        }
+        stag {
+            dimension "default"
+            applicationIdSuffix ".stag"
+            resValue "string", "app_name", "StagExpFLane"
+        }
+        prod {
+            dimension "default"
+            resValue "string", "app_name", "ProdExpFLane"
         }
     }
 
