@@ -3,7 +3,6 @@ import {Text, View, StyleSheet} from 'react-native';
 import Config from 'react-native-config';
 
 const App = () => {
-  console.log('Config', Config)
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Explore FastLane</Text>
