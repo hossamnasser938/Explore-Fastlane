@@ -15,53 +15,61 @@ For _fastlane_ installation instructions, see [Installing _fastlane_](https://do
 
 ## Android
 
-### android test
+### android build
 
 ```sh
-[bundle exec] fastlane android test
+[bundle exec] fastlane android build
 ```
 
-Runs all the tests
+Build
 
-### android beta
+### android deliver_to_app_distribution
 
 ```sh
-[bundle exec] fastlane android beta
+[bundle exec] fastlane android deliver_to_app_distribution
 ```
 
-Submit a new Beta Build to Crashlytics Beta
+Deliver to app distribution
 
-### android deploy
-
-```sh
-[bundle exec] fastlane android deploy
-```
-
-Deploy a new version to the Google Play
-
-### android build_debug_locally
+### android build_and_deliver
 
 ```sh
-[bundle exec] fastlane android build_debug_locally
-```
-
-Build Debug locally
-
-### android build_release_locally
-
-```sh
-[bundle exec] fastlane android build_release_locally
-```
-
-Build Release locally
-
-### android deliver_release_to_app_distribution
-
-```sh
-[bundle exec] fastlane android deliver_release_to_app_distribution
+[bundle exec] fastlane android build_and_deliver
 ```
 
 Deliver Release to Firebase App Distribution
+
+### android prod_build_and_deliver
+
+```sh
+[bundle exec] fastlane android prod_build_and_deliver
+```
+
+Deliver PROD Release to Firebase App Distribution
+
+### android stag_build_and_deliver
+
+```sh
+[bundle exec] fastlane android stag_build_and_deliver
+```
+
+Deliver STAG Release to Firebase App Distribution
+
+### android dev_build_and_deliver
+
+```sh
+[bundle exec] fastlane android dev_build_and_deliver
+```
+
+Deliver DEV Release to Firebase App Distribution
+
+### android env_build_and_deliver
+
+```sh
+[bundle exec] fastlane android env_build_and_deliver
+```
+
+Deliver ENV Release to Firebase App Distribution
 
 ----
 

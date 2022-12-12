@@ -16,44 +16,59 @@
 default_platform(:android)
 
 platform :android do
-  desc "Runs all the tests"
-  lane :test do
-    gradle(task: "test")
+  desc "Build"
+  lane :build do |options|
+    gradle(
+      task: "clean assemble",
+      flavor: options[:flavor],
+      build_type: "Release"
+    )
   end
 
-  desc "Submit a new Beta Build to Crashlytics Beta"
-  lane :beta do
-    gradle(task: "clean assembleRelease")
-    crashlytics
-  
-    # sh "your_script.sh"
-    # You can also use other beta testing services here
-  end
-
-  desc "Deploy a new version to the Google Play"
-  lane :deploy do
-    gradle(task: "clean assembleRelease")
-    upload_to_play_store
-  end
-
-  desc "Build Debug locally"
-  lane :build_debug do
-    gradle(task: "clean assembleDebug")
-  end
-
-  desc "Build Release locally"
-  lane :build_release do
-    gradle(task: "clean assembleRelease")
+  desc "Deliver to app distribution"
+  lane :deliver_to_app_distribution do |options|
+    firebase_app_distribution(
+      app: options[:app],
+      firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"],
+      groups: "testers",
+    )
   end
 
   desc "Deliver Release to Firebase App Distribution"
-  lane :deliver_release_to_app_distribution do
-    gradle(task: "clean assembleRelease")
-    firebase_app_distribution(
-      app: "1:950714050129:android:fc78ffe99f2037c4853a70",
-      # service_credentials_file: "explore-fastlane-service-account-app-distribution-admin-key.json",
-      firebase_cli_token: "1//03xZPe0i87cU0CgYIARAAGAMSNwF-L9Ird01DLnDBelCu6hh90pqAPYMiRtc-EaByYTJYHHyDLwDYDLC_62oeYW1bmbuFbxYpvU4",
-      groups: "testers",
-    )
+  lane :build_and_deliver do |options|
+    build(flavor: options[:flavor])
+    deliver_to_app_distribution(app: options[:app])
+  end
+
+  desc "Deliver PROD Release to Firebase App Distribution"
+  lane :prod_build_and_deliver do |options|
+    build(flavor: "prod")
+    deliver_to_app_distribution(app: ENV["ANDROID_PROD_APP_ID"])
+  end
+
+  desc "Deliver STAG Release to Firebase App Distribution"
+  lane :stag_build_and_deliver do |options|
+    build(flavor: "stag")
+    deliver_to_app_distribution(app: ENV["ANDROID_STAG_APP_ID"])
+  end
+
+  desc "Deliver DEV Release to Firebase App Distribution"
+  lane :dev_build_and_deliver do |options|
+    build(flavor: "development")
+    deliver_to_app_distribution(app: ENV["ANDROID_DEV_APP_ID"])
+  end
+
+  desc "Deliver ENV Release to Firebase App Distribution"
+  lane :env_build_and_deliver do |options|
+    case options[:env]
+    when "prod"
+      prod_build_and_deliver
+    when "stag"
+      stag_build_and_deliver
+    when "dev"
+      dev_build_and_deliver
+    else
+      UI.user_error!("env should be one of 'prod', 'stag', 'dev'")
+    end
   end
 end
