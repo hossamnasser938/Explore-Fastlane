@@ -47,7 +47,7 @@ platform :android do
 
   desc "Deliver PROD Release to Firebase App Distribution"
   lane :prod_build_and_deliver do |options|
-    build_and_deliver(flavor: "prod", app: "1:950714050129:android:fc78ffe99f2037c4853a70")
+    build_and_deliver(flavor: "prod", app: ENV["ANDROID_PROD_APP_ID"])
   end
 
   desc "Deliver STAG Release to Firebase App Distribution"
