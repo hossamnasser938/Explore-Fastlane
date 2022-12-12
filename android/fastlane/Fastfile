@@ -47,20 +47,17 @@ platform :android do
 
   desc "Deliver PROD Release to Firebase App Distribution"
   lane :prod_build_and_deliver do |options|
-    build(flavor: "prod")
-    deliver_to_app_distribution(app: ENV["ANDROID_PROD_APP_ID"])
+    build_and_deliver(flavor: "prod", app: ENV["ANDROID_PROD_APP_ID"])
   end
 
   desc "Deliver STAG Release to Firebase App Distribution"
   lane :stag_build_and_deliver do |options|
-    build(flavor: "stag")
-    deliver_to_app_distribution(app: ENV["ANDROID_STAG_APP_ID"])
+    build_and_deliver(flavor: "stag", app: ENV["ANDROID_STAG_APP_ID"])
   end
 
   desc "Deliver DEV Release to Firebase App Distribution"
   lane :dev_build_and_deliver do |options|
-    build(flavor: "development")
-    deliver_to_app_distribution(app: ENV["ANDROID_DEV_APP_ID"])
+    build_and_deliver(flavor: "development", app: ENV["ANDROID_DEV_APP_ID"])
   end
 
   desc "Deliver ENV Release to Firebase App Distribution"

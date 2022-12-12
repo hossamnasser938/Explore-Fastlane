@@ -51,6 +51,10 @@ jobs:
     working_directory: ~/project/android
     docker:
       - image: circleci/android:api-29-node
+    parameters:
+      app_env:
+        type: string
+        default: dev
 
     steps:
       - checkout:
@@ -84,7 +88,7 @@ jobs:
       - run:
           name: build android and deploy to app distribution
           command: |
-            bundle exec fastlane env_build_and_deliver env:prod
+            bundle exec fastlane env_build_and_deliver env:<< parameters.app_env >>
       - store_artifacts:
           path: app/build/outputs/apk/release/app-release.apk
 
@@ -93,20 +97,57 @@ workflows:
     jobs:
       - node-prepare
 
-  android-build-w:
+  android-build-dev:
     jobs:
       - node-prepare:
           filters:
             tags:
-              only: /^BUILD.*/
+              only: /^BUILD_DEV.*/
             branches:
               ignore: /.*/
       - android-build:
+          app_env: dev
           requires:
             - node-prepare
           filters:
             tags:
-              only: /^BUILD.*/
+              only: /^BUILD_DEV.*/
+            branches:
+              ignore: /.*/
+
+  android-build-stag:
+    jobs:
+      - node-prepare:
+          filters:
+            tags:
+              only: /^BUILD_STAG.*/
+            branches:
+              ignore: /.*/
+      - android-build:
+          app_env: stag
+          requires:
+            - node-prepare
+          filters:
+            tags:
+              only: /^BUILD_STAG.*/
+            branches:
+              ignore: /.*/
+
+  android-build-prod:
+    jobs:
+      - node-prepare:
+          filters:
+            tags:
+              only: /^BUILD_PROD.*/
+            branches:
+              ignore: /.*/
+      - android-build:
+          app_env: prod
+          requires:
+            - node-prepare
+          filters:
+            tags:
+              only: /^BUILD_PROD.*/
             branches:
               ignore: /.*/
 # VS Code Extension Version: 1.4.0
