@@ -16,9 +16,9 @@
 default_platform(:android)
 
 platform :android do
-  ENV["ANDROID_DEV_APP_ID"] = "1:950714050129:android:c8cbc32371993894853a70"
-  ENV["ANDROID_STAG_APP_ID"] = "1:950714050129:android:163b650fe5c0c36c853a70"
-  ENV["ANDROID_PROD_APP_ID"] = "1:950714050129:android:fc78ffe99f2037c4853a70"
+  ENV["ANDROID_DEV_FIREBASE_APP_ID"] = "1:950714050129:android:c8cbc32371993894853a70"
+  ENV["ANDROID_STAG_FIREBASE_APP_ID"] = "1:950714050129:android:163b650fe5c0c36c853a70"
+  ENV["ANDROID_PROD_FIREBASE_APP_ID"] = "1:950714050129:android:fc78ffe99f2037c4853a70"
 
   desc "Runs all the tests"
   lane :test do
@@ -51,17 +51,17 @@ platform :android do
 
   desc "Deliver PROD Release to Firebase App Distribution"
   lane :prod_build_and_deliver do |options|
-    build_and_deliver(flavor: "prod", app: ENV["ANDROID_PROD_APP_ID"])
+    build_and_deliver(flavor: "prod", app: ENV["ANDROID_PROD_FIREBASE_APP_ID"])
   end
 
   desc "Deliver STAG Release to Firebase App Distribution"
   lane :stag_build_and_deliver do |options|
-    build_and_deliver(flavor: "stag", app: ENV["ANDROID_STAG_APP_ID"])
+    build_and_deliver(flavor: "stag", app: ENV["ANDROID_STAG_FIREBASE_APP_ID"])
   end
 
   desc "Deliver DEV Release to Firebase App Distribution"
   lane :dev_build_and_deliver do |options|
-    build_and_deliver(flavor: "development", app: ENV["ANDROID_DEV_APP_ID"])
+    build_and_deliver(flavor: "development", app: ENV["ANDROID_DEV_FIREBASE_APP_ID"])
   end
 
   desc "Deliver ENV Release to Firebase App Distribution"
