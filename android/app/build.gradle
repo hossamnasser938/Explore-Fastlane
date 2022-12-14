@@ -148,8 +148,6 @@ android {
         resValue "string", "build_config_package", "com.explrefastlane"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
         buildConfigField "boolean", "IS_NEW_ARCHITECTURE_ENABLED", isNewArchitectureEnabled().toString()
 
         if (isNewArchitectureEnabled()) {
@@ -255,15 +253,21 @@ android {
             dimension "default"
             applicationIdSuffix ".dev"
             resValue "string", "app_name", "DevExpFLane"
+            versionCode 1
+            versionName "1.0"
         }
         stag {
             dimension "default"
             applicationIdSuffix ".stag"
             resValue "string", "app_name", "StagExpFLane"
+            versionCode 1
+            versionName "1.0"
         }
         prod {
             dimension "default"
             resValue "string", "app_name", "ProdExpFLane"
+            versionCode 1
+            versionName "1.0"
         }
     }
 

@@ -3,3 +3,5 @@
 # Ensure this file is checked in to source control!
 
 gem 'fastlane-plugin-firebase_app_distribution'
+gem 'fastlane-plugin-android_versioning'
+gem 'fastlane-plugin-commit_android_version_bump'

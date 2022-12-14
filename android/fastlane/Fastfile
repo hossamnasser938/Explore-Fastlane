@@ -43,10 +43,31 @@ platform :android do
     )
   end
 
+  desc ""
+  lane :increment_version_and_commit do |options|
+    increment_version_code(
+      app_project_dir: '**/app',
+      bump_type: 'minor',
+      flavor: options[:flavor]
+    )
+    if options[:flavor] == "prod"
+      increment_version_name(
+        app_project_dir: '**/app',
+        bump_type: 'minor',
+        flavor: options[:flavor]
+      )
+    end
+    commit_android_version_bump(
+      gradle_file_folder: "project"
+    )
+  end
+
   desc "Deliver Release to Firebase App Distribution"
   lane :build_and_deliver do |options|
+    increment_version_and_commit(flavor: options[:flavor])
     build(flavor: options[:flavor])
     deliver_to_app_distribution(app: options[:app])
+    push_to_git_remote
   end
 
   desc "Deliver PROD Release to Firebase App Distribution"
