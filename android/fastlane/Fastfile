@@ -57,7 +57,7 @@ platform :android do
       )
     end
     commit_android_version_bump(
-      gradle_file_folder: "project"
+      gradle_file_folder: "app"
     )
   end
 
