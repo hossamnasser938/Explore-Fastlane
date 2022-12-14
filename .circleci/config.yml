@@ -76,6 +76,14 @@ jobs:
             - vendor/bundle
 
       - run:
+          name: set git configs
+          command: |
+            GIT_EMAIL="hossamnasser938@gmail.com"
+            GIT_NAME="Hossam"
+            git config --global user.email $GIT_EMAIL
+            git config --global user.name $GIT_NAME
+
+      - run:
           name: fastlane tests
           command: |
             mkdir -p test-results/fastlane
