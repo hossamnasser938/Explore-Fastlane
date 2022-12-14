@@ -60,9 +60,15 @@ platform :android do
         flavor: options[:flavor]
       )
     end
-    commit_android_version_bump(
-      gradle_file_folder: "android/app"
+    version_name = get_version_name(
+      app_project_dir: '**/app',
+      flavor: options[:flavor]
     )
+    version_code = get_version_code(
+      app_project_dir: '**/app',
+      flavor: options[:flavor]
+    )
+    git_commit(path: ["app/build.gradle"], message: "Bump Android V(#{version_name}) B(#{version_code})")
   end
 
   desc "Deliver Release to Firebase App Distribution"
