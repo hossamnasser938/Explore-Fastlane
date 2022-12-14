@@ -47,8 +47,8 @@ platform :android do
     )
   end
 
-  desc ""
-  lane :increment_version_and_commit do |options|
+  desc "increment version code in all envs and increment version name in prod"
+  lane :increment_version do |options|
     increment_version_code(
       app_project_dir: '**/app',
       flavor: options[:flavor]
@@ -60,6 +60,11 @@ platform :android do
         flavor: options[:flavor]
       )
     end
+    
+  end
+
+  desc "commit and push"
+  lane :commit_and_push do |options|
     version_name = get_version_name(
       app_project_dir: '**/app',
       flavor: options[:flavor]
@@ -69,6 +74,10 @@ platform :android do
       flavor: options[:flavor]
     )
     git_commit(path: ["app/build.gradle"], message: "Bump Android V(#{version_name}) B(#{version_code})")
+    push_to_git_remote(
+      local_branch: "main",  
+      remote_branch: "main", 
+    )
   end
 
   desc "Deliver Release to Firebase App Distribution"
@@ -76,10 +85,7 @@ platform :android do
     increment_version_and_commit(flavor: options[:flavor])
     build(flavor: options[:flavor])
     deliver_to_app_distribution(app: options[:app])
-    push_to_git_remote(
-      local_branch: "main",  
-      remote_branch: "main", 
-    )
+    commit_and_push(flavor: options[:flavor])
   end
 
   desc "Deliver PROD Release to Firebase App Distribution"
