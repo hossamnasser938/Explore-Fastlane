@@ -23,10 +23,33 @@ platform :android do
   ENV["ANDROID_DEV_FIREBASE_APP_ID"] = "1:950714050129:android:c8cbc32371993894853a70"
   ENV["ANDROID_STAG_FIREBASE_APP_ID"] = "1:950714050129:android:163b650fe5c0c36c853a70"
   ENV["ANDROID_PROD_FIREBASE_APP_ID"] = "1:950714050129:android:fc78ffe99f2037c4853a70"
+  ENV["BRANCH_NAME"] = "main"
 
   desc "Runs all the tests"
   lane :test do
     gradle(task: "test")
+  end
+
+  def prepare_git (tag, branch)
+    sh("git fetch")
+    git_switch_branch(branch: branch)
+    commit = sh("git rev-list -n 1 \"#{tag}\"")
+    branch = sh("git branch --no-color --no-column --format \"%(refname:lstrip=2)\" --contains #{commit}")
+  end
+
+  desc "increment version code in all envs and increment version name in prod"
+  lane :increment_version do |options|
+    increment_version_code(
+      app_project_dir: '**/app',
+      flavor: options[:flavor]
+    )
+    if options[:flavor] == "prod"
+      increment_version_name(
+        app_project_dir: '**/app',
+        bump_type: 'minor',
+        flavor: options[:flavor]
+      )
+    end
   end
 
   desc "Build"
@@ -47,22 +70,6 @@ platform :android do
     )
   end
 
-  desc "increment version code in all envs and increment version name in prod"
-  lane :increment_version do |options|
-    increment_version_code(
-      app_project_dir: '**/app',
-      flavor: options[:flavor]
-    )
-    if options[:flavor] == "prod"
-      increment_version_name(
-        app_project_dir: '**/app',
-        bump_type: 'minor',
-        flavor: options[:flavor]
-      )
-    end
-    
-  end
-
   desc "commit and push"
   lane :commit_and_push do |options|
     version_name = get_version_name(
@@ -75,13 +82,14 @@ platform :android do
     )
     git_commit(path: ["app/build.gradle"], message: "Bump Android V(#{version_name}) B(#{version_code})")
     push_to_git_remote(
-      local_branch: "main",  
-      remote_branch: "main", 
+      local_branch: ENV["BRANCH_NAME"],  
+      remote_branch: ENV["BRANCH_NAME"], 
     )
   end
 
   desc "Deliver Release to Firebase App Distribution"
   lane :build_and_deliver do |options|
+    prepare_git(ENV["BRANCH_NAME"], options[:tag])
     increment_version(flavor: options[:flavor])
     build(flavor: options[:flavor])
     deliver_to_app_distribution(app: options[:app])
