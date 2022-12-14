@@ -89,7 +89,7 @@ platform :android do
 
   desc "Deliver Release to Firebase App Distribution"
   lane :build_and_deliver do |options|
-    prepare_git(ENV["BRANCH_NAME"], options[:tag])
+    prepare_git(options[:tag], ENV["BRANCH_NAME"])
     increment_version(flavor: options[:flavor])
     build(flavor: options[:flavor])
     deliver_to_app_distribution(app: options[:app])
