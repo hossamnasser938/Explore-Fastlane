@@ -253,7 +253,7 @@ android {
             dimension "default"
             applicationIdSuffix ".dev"
             resValue "string", "app_name", "DevExpFLane"
-            versionCode 1
+            versionCode 2
             versionName "1.0"
         }
         stag {
