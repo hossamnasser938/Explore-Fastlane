@@ -32,9 +32,7 @@ platform :android do
 
   def prepare_git (tag, branch)
     sh("git fetch")
-    git_switch_branch(branch: branch)
-    commit = sh("git rev-list -n 1 \"#{tag}\"")
-    branch = sh("git branch --no-color --no-column --format \"%(refname:lstrip=2)\" --contains #{commit}")
+    sh("git checkout " + branch)
   end
 
   desc "increment version code in all envs and increment version name in prod"
