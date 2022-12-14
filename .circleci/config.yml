@@ -75,6 +75,8 @@ jobs:
           paths:
             - vendor/bundle
 
+      - run: cat Gemfile.lock
+
       - run:
           name: fastlane tests
           command: |
