@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  macos: circleci/macos@2
+
 jobs:
   node-prepare:
     working_directory: ~/project
@@ -52,6 +55,9 @@ jobs:
       xcode: '13.1.0'
     working_directory: ~/project
     steps:
+      - macos/switch-ruby:
+          version: '2.7.5'
+
       - checkout:
           path: ~/project
 
