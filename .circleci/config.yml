@@ -66,15 +66,14 @@ jobs:
             - vendor/bundle
 
       - restore_cache:
-          key: pods-v1-{{ checksum "ios/Podfile" }}-{{ checksum "ios/Podfile.lock" }}-{{ arch }}
+          key: pods-v1-{{ checksum "Podfile" }}-{{ checksum "Podfile.lock" }}-{{ arch }}
       - run:
           name: cocoapods
           command: pod install
-          working_directory: ~/project/ios
       - save_cache:
-          key: pods-v1-{{ checksum "ios/Podfile" }}-{{ checksum "ios/Podfile.lock" }}-{{ arch }}
+          key: pods-v1-{{ checksum "Podfile" }}-{{ checksum "Podfile.lock" }}-{{ arch }}
           paths:
-            - ios/Pods
+            - Pods
 
       - run: bundle exec danger --verbose
 
