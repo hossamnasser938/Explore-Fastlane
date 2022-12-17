@@ -7,6 +7,7 @@ const App = () => {
     <View style={styles.container}>
       <Text style={styles.text}>Explore FastLane</Text>
       <Text style={styles.subText}>{Config.ENVIRONMENT}</Text>
+      <Text>New Cool feature</Text>
     </View>
   );
 };
