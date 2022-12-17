@@ -53,7 +53,7 @@ jobs:
     working_directory: ~/project
     shell: /bin/bash --login -o pipefail
     steps:
-     - checkout:
+      - checkout:
           path: ~/project
 
       - attach_workspace:
