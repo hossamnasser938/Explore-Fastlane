@@ -109,7 +109,10 @@ jobs:
           paths:
             - ios/Pods
 
-      - run: bundle exec danger --verbose
+      - run:
+          name: danger
+          command: bundle exec danger --verbose
+          working_directory: ~/project/ios
 
   android-build:
     working_directory: ~/project/android
