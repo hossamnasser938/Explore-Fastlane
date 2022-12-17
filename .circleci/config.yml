@@ -47,6 +47,34 @@ jobs:
       - store_artifacts:
           path: test-results
 
+  ios_build:
+    macos:
+      xcode: '13.1.0'
+    working_directory: ~/project/ios
+    environment:
+      FL_OUTPUT_DIR: output
+      FASTLANE_LANE: test
+    shell: /bin/bash --login -o pipefail
+    steps:
+      - checkout:
+          path: ~/project
+      - run: gem install bundler
+      - restore_cache:
+          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+      - run: bundle install
+      - save_cache:
+          key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
+          paths:
+            - vendor/bundle
+      - run:
+          name: fastlane
+          command: bundle exec fastlane $FASTLANE_LANE
+      - store_artifacts:
+          path: output
+      - store_test_results:
+          path: output/scan
+      - run: bundle exec danger --verbose
+
   android-build:
     working_directory: ~/project/android
     docker:
@@ -106,6 +134,7 @@ workflows:
   node-prepare-w:
     jobs:
       - node-prepare
+      - ios_build
 
   android-build-dev:
     jobs:
