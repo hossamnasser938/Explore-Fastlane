@@ -101,7 +101,7 @@ jobs:
 
       - run:
           name: cocoapods
-          command: pod install
+          command: bundle exec pod install
           working_directory: ~/project/ios
 
       - save_cache:
