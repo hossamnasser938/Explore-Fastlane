@@ -20,6 +20,11 @@ platform :ios do
     setup_circle_ci
   end
 
+  lane :tests do
+    run_tests(workspace: "ExplreFastLane.xcworkspace",
+              scheme: "ExplreFastLane")
+  end
+
   desc "Build locally"
   lane :local_build do
     build_app(scheme: "ExplreFastLane")

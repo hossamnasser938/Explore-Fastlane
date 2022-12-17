@@ -110,6 +110,11 @@ jobs:
             - ios/Pods
 
       - run:
+          name: ios tests
+          command: bundle exec fastlane tests
+          working_directory: ~/project/ios
+
+      - run:
           name: danger
           command: bundle exec danger --verbose
           working_directory: ~/project/ios
