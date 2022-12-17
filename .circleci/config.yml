@@ -51,7 +51,6 @@ jobs:
     macos:
       xcode: '13.1.0'
     working_directory: ~/project
-    shell: /bin/bash --login -o pipefail
     steps:
       - checkout:
           path: ~/project
