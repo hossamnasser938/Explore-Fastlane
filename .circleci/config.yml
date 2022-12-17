@@ -137,7 +137,9 @@ workflows:
   node-prepare-w:
     jobs:
       - node-prepare
-      - ios_build
+      - ios_build:
+          requires:
+            - node_prepare
 
   android-build-dev:
     jobs:
