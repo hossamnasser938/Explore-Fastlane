@@ -51,9 +51,6 @@ jobs:
     macos:
       xcode: '13.1.0'
     working_directory: ~/project/ios
-    environment:
-      FL_OUTPUT_DIR: output
-      FASTLANE_LANE: test
     shell: /bin/bash --login -o pipefail
     steps:
       - checkout:
@@ -66,13 +63,6 @@ jobs:
           key: bundle-v1-{{ checksum "Gemfile.lock" }}-{{ arch }}
           paths:
             - vendor/bundle
-      - run:
-          name: fastlane
-          command: bundle exec fastlane $FASTLANE_LANE
-      - store_artifacts:
-          path: output
-      - store_test_results:
-          path: output/scan
       - run: bundle exec danger --verbose
 
   android-build:
