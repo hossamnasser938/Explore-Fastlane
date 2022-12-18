@@ -6,3 +6,4 @@ gem 'cocoapods', '= 1.11.3'
 gem "fastlane"
 gem "danger"
 gem "danger-device_grid"
+gem "dotenv"

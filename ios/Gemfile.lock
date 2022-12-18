@@ -319,6 +319,7 @@ DEPENDENCIES
   cocoapods (= 1.11.3)
   danger
   danger-device_grid
+  dotenv
   fastlane
 
 RUBY VERSION
