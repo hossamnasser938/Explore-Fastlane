@@ -34,9 +34,9 @@ platform :ios do
 
   desc "Build locally"
   lane :local_build do
-    #setup_code_signing
-    #gym
-    #upload_to_appetize
+    setup_code_signing
+    gym
+    upload_to_appetize
     danger
   end
 end
