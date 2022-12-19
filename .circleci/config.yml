@@ -109,15 +109,15 @@ jobs:
           paths:
             - ios/Pods
 
-      - run:
-          name: ios tests
-          command: bundle exec fastlane tests
-          working_directory: ~/project/ios
-
       # - run:
-      #     name: build locally
-      #     command: bundle exec fastlane local_build
+      #     name: ios tests
+      #     command: bundle exec fastlane tests
       #     working_directory: ~/project/ios
+
+      - run:
+          name: build locally
+          command: bundle exec fastlane local_build
+          working_directory: ~/project/ios
 
       - run:
           name: danger

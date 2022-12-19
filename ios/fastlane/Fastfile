@@ -37,5 +37,6 @@ platform :ios do
     #setup_code_signing
     #gym
     #upload_to_appetize
+    danger
   end
 end
