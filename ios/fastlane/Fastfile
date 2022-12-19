@@ -21,9 +21,22 @@ platform :ios do
               scheme: "ExplreFastLane")
   end
 
+  desc "upload ipa t appetize"
+  lane :upload_to_appetize do
+    app_path = File.join(__dir__, "ExplreFastLane.ipa")
+    UI.message("App path: #{app_path}")
+    UI.user_error!("Couldn't find app") unless app_path
+    zipped_bundle = zip(path: app_path, output_path: File.join(__dir__, "Result.zip"))
+    appetize(path: zipped_bundle)
+    url = appetize_viewing_url_generator(scale: "75", color: "black")
+    UI.message("Generated URL: #{url}")
+  end
+
   desc "Build locally"
   lane :local_build do
-    setup_code_signing
-    gym
+    #setup_code_signing
+    #gym
+    #upload_to_appetize
+    danger
   end
 end
