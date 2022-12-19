@@ -114,14 +114,14 @@ jobs:
           command: bundle exec fastlane tests
           working_directory: ~/project/ios
 
-      # - run:
-      #     name: danger
-      #     command: bundle exec danger --verbose
-      #     working_directory: ~/project/ios
       - run:
-          name: build locally
-          command: bundle exec fastlane local_build
+          name: danger
+          command: bundle exec danger --verbose
           working_directory: ~/project/ios
+      # - run:
+      #     name: build locally
+      #     command: bundle exec fastlane local_build
+      #     working_directory: ~/project/ios
 
   android-build:
     working_directory: ~/project/android
