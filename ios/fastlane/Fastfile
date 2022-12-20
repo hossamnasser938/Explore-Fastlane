@@ -29,6 +29,9 @@ platform :ios do
     zipped_bundle = zip(path: app_path, output_path: File.join(__dir__, "Result.zip"))
     appetize(path: zipped_bundle)
     url = appetize_viewing_url_generator(scale: "75", color: "black")
+    appetize_url_file = File.new("appetize_url.txt", "w")
+    appetize_url_file.puts(url)
+    appetize_url_file.close
     UI.message("Generated URL: #{url}")
   end
 

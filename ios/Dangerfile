@@ -1,5 +1,3 @@
-TEST_ENV_VAR = ENV["TEST_ENV_VAR"]
-
-message("Hello. This is danger")
-
-message("Test getting env vars TEST_ENV_VAR = " + TEST_ENV_VAR)
+appetize_url_file = File.open("fastlane/appetize_url.txt")
+appetize_url_file_content = appetize_url_file.read
+message("appetize url = " + appetize_url_file_content)
