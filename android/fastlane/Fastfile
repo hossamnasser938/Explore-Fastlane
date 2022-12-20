@@ -18,6 +18,7 @@ default_platform(:android)
 platform :android do
   before_all do
     ensure_git_status_clean
+    Dotenv.load ".env"
   end
   
   ENV["ANDROID_DEV_FIREBASE_APP_ID"] = "1:950714050129:android:c8cbc32371993894853a70"
@@ -59,6 +60,20 @@ platform :android do
     )
   end
 
+  desc "upload app to appetize"
+  lane :upload_to_appetize do
+    app_path = File.join(__dir__, "app/build/outputs/apk/development/release/app-development-release.apk")
+    UI.message("App path: #{app_path}")
+    UI.user_error!("Couldn't find app") unless app_path
+    appetize(path: app_path)
+    url = appetize_viewing_url_generator(scale: "75", color: "black")
+    appetize_url_file = File.new("appetize_url.txt", "w")
+    appetize_url_file.puts(url)
+    appetize_url_file.close
+    UI.message("Generated URL: #{url}")
+    danger
+  end
+
   desc "Deliver to app distribution"
   lane :deliver_to_app_distribution do |options|
     firebase_app_distribution(
@@ -90,6 +105,7 @@ platform :android do
     prepare_git(options[:tag], ENV["BRANCH_NAME"])
     increment_version(flavor: options[:flavor])
     build(flavor: options[:flavor])
+    upload_to_appetize
     deliver_to_app_distribution(app: options[:app])
     commit_and_push(flavor: options[:flavor])
   end
