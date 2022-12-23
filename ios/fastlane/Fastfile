@@ -41,6 +41,6 @@ platform :ios do
     gym
     #upload_to_appetize
     #danger
-    firebase_app_distribution
+    firebase_app_distribution(firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"])
   end
 end
