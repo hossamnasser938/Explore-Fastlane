@@ -39,7 +39,8 @@ platform :ios do
   lane :local_build do
     setup_code_signing
     gym
-    upload_to_appetize
-    danger
+    #upload_to_appetize
+    #danger
+    firebase_app_distribution
   end
 end
