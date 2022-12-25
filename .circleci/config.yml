@@ -50,6 +50,11 @@ jobs:
       - store_artifacts:
           path: test-results
 
+      - run:
+          name: log branch
+          command: |
+            echo ${CIRCLE_BRANCH}
+
   ios_build:
     macos:
       xcode: '13.1.0'
@@ -237,4 +242,4 @@ workflows:
               only: /^BUILD_PROD.*/
             branches:
               ignore: /.*/
-# VS Code Extension Version: 1.4.0
+# VS Code Extension Version: 1.5.0
