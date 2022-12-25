@@ -57,7 +57,7 @@ jobs:
             then
             url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/${CIRCLE_PR_NUMBER}"
             target_branch=$(
-              curl --location --request GET "$url" --header ${DANGER_GITHUB_API_TOKEN}
+              curl --location --request GET "$url" --header "access_token: ${DANGER_GITHUB_API_TOKEN}"
             )
             echo target_branch
 
