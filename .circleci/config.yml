@@ -53,7 +53,13 @@ jobs:
       - run:
           name: log branch
           command: |
-            echo ${CIRCLE_BRANCH}
+            if [[ -n ${CIRCLE_PR_NUMBER} ]]
+            then
+            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$CIRCLE_PR_NUMBER"
+            target_branch=$(
+              curl --location --request GET "$url" \ --header ${DANGER_GITHUB_API_TOKEN} | ./jq '.base.ref' | tr -d '"'
+            )
+            echo target_branch
 
   ios_build:
     macos:
@@ -181,13 +187,13 @@ workflows:
   node-prepare-w:
     jobs:
       - node-prepare
-      - ios_build:
-          requires:
-            - node-prepare
-      - android-build:
-          app_env: dev
-          requires:
-            - node-prepare
+      # - ios_build:
+      #     requires:
+      #       - node-prepare
+      # - android-build:
+      #     app_env: dev
+      #     requires:
+      #       - node-prepare
 
   android-build-dev:
     jobs:
