@@ -50,6 +50,8 @@ jobs:
       # - store_artifacts:
       #     path: test-results
 
+      - run: echo $CIRCLE_PULL_REQUEST
+
       - run:
           name: get branch
           command: |
