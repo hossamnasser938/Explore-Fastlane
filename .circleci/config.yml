@@ -53,13 +53,10 @@ jobs:
       - run:
           name: get branch
           command: |
-            # if [[ -n ${CIRCLE_PR_NUMBER} ]]
-            # then
             brew install jq
             url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/9"
             target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | jq '.base.ref' | tr -d '"')
             echo $target_branch
-            # fi
 
       - run:
           name: log branch
