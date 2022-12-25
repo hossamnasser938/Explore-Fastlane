@@ -52,7 +52,7 @@ jobs:
 
       - run: echo "something"
 
-      - run: echo ${CIRCLE_PR_NUMBER}
+      - run: echo $DANGER_GITHUB_API_TOKEN
 
       # - run:
       #     name: get branch
