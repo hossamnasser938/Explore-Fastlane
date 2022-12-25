@@ -50,14 +50,15 @@ jobs:
       # - store_artifacts:
       #     path: test-results
 
-      - run: echo $CIRCLE_PULL_REQUEST
-
       - run:
           name: get branch
           command: |
             curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
             chmod +x jq
-            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/9"
+            echo $CIRCLE_PULL_REQUEST
+            PR_NUMBER=${CIRCLE_PULL_REQUEST##*/}
+            echo $PR_NUMBER
+            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$PR_NUMBER"
             target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | ./jq '.base.ref' | tr -d '"')
             echo $target_branch
 
