@@ -50,23 +50,25 @@ jobs:
       # - store_artifacts:
       #     path: test-results
 
-      - run:
-          name: get branch
-          command: |
-            echo $CIRCLE_PR_NUMBER
-            if [[ -n ${CIRCLE_PR_NUMBER} ]]
-            then
-            brew install jq
-            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$CIRCLE_PR_NUMBER"
-            echo $url
-            target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | jq '.base.ref' | tr -d '"')
-            echo $target_branch
-            fi
+      - run: echo "something"
 
-      - run:
-          name: log branch
-          command: |
-            echo $target_branch
+      - run: echo $CIRCLE_PR_NUMBER
+
+      # - run:
+      #     name: get branch
+      #     command: |
+      #       if [[ -n ${CIRCLE_PR_NUMBER} ]]
+      #       then
+      #       brew install jq
+      #       url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$CIRCLE_PR_NUMBER"
+      #       target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | jq '.base.ref' | tr -d '"')
+      #       echo $target_branch
+      #       fi
+
+      # - run:
+      #     name: log branch
+      #     command: |
+      #       echo $target_branch
 
   ios_build:
     macos:
