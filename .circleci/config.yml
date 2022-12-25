@@ -13,49 +13,49 @@ jobs:
       - checkout:
           path: ~/project
 
-      - restore_cache:
-          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      # - restore_cache:
+      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
-      - restore_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      # - restore_cache:
+      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
-      - run: yarn install
+      # - run: yarn install
 
-      - save_cache:
-          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-          paths:
-            - ~/.cache/yarn
+      # - save_cache:
+      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      #     paths:
+      #       - ~/.cache/yarn
 
-      - save_cache:
-          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-          paths:
-            - node_modules
+      # - save_cache:
+      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      #     paths:
+      #       - node_modules
 
-      - run:
-          name: jest tests
-          command: |
-            mkdir -p test-results/jest
-            yarn run test
-          environment:
-            JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+      # - run:
+      #     name: jest tests
+      #     command: |
+      #       mkdir -p test-results/jest
+      #       yarn run test
+      #     environment:
+      #       JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
 
-      - persist_to_workspace:
-          root: ~/project
-          paths:
-            - node_modules
+      # - persist_to_workspace:
+      #     root: ~/project
+      #     paths:
+      #       - node_modules
 
-      - store_test_results:
-          path: test-results
+      # - store_test_results:
+      #     path: test-results
 
-      - store_artifacts:
-          path: test-results
+      # - store_artifacts:
+      #     path: test-results
 
       - run:
           name: log branch
           command: |
             if [[ -n ${CIRCLE_PR_NUMBER} ]]
             then
-            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$CIRCLE_PR_NUMBER"
+            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/${CIRCLE_PR_NUMBER}"
             target_branch=$(
               curl --location --request GET "$url" \ --header ${DANGER_GITHUB_API_TOKEN} | ./jq '.base.ref' | tr -d '"'
             )
