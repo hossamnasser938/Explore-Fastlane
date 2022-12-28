@@ -13,7 +13,7 @@ platform :ios do
 
   desc "clone certificates and provisioning profiles required"
   lane :setup_code_signing do
-    match
+    match(app_identifier: ["com.cicd.explorefastlane", "com.cicd.explorefastlane.dev", "com.cicd.explorefastlane.stg"])
   end
 
   lane :tests do

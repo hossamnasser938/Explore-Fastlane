@@ -9,7 +9,11 @@
     <key>provisioningProfiles</key> 
     <dict> 
         <key>com.cicd.explorefastlane</key> 
-        <string>match AdHoc com.cicd.explorefastlane</string> 
+        <string>match AdHoc com.cicd.explorefastlane</string>
+        <key>com.cicd.explorefastlane.dev</key> 
+        <string>match AdHoc com.cicd.explorefastlane.dev</string>
+        <key>com.cicd.explorefastlane.stg</key> 
+        <string>match AdHoc com.cicd.explorefastlane.stg</string>
     </dict>
 </dict>
 </plist>
