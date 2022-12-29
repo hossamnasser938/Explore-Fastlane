@@ -13,60 +13,55 @@ jobs:
       - checkout:
           path: ~/project
 
-      # - restore_cache:
-      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      - restore_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
 
-      # - restore_cache:
-      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      - restore_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
 
-      # - run: yarn install
+      - run: yarn install
 
-      # - save_cache:
-      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
-      #     paths:
-      #       - ~/.cache/yarn
+      - save_cache:
+          key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+          paths:
+            - ~/.cache/yarn
 
-      # - save_cache:
-      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
-      #     paths:
-      #       - node_modules
+      - save_cache:
+          key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+          paths:
+            - node_modules
+
+      - run:
+          name: jest tests
+          command: |
+            mkdir -p test-results/jest
+            yarn run test
+          environment:
+            JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+
+      - persist_to_workspace:
+          root: ~/project
+          paths:
+            - node_modules
+
+      - store_test_results:
+          path: test-results
+
+      - store_artifacts:
+          path: test-results
 
       # - run:
-      #     name: jest tests
+      #     name: get branch
       #     command: |
-      #       mkdir -p test-results/jest
-      #       yarn run test
-      #     environment:
-      #       JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
-
-      # - persist_to_workspace:
-      #     root: ~/project
-      #     paths:
-      #       - node_modules
-
-      # - store_test_results:
-      #     path: test-results
-
-      # - store_artifacts:
-      #     path: test-results
-
-      - run:
-          name: get branch
-          command: |
-            PR_NUMBER=${CIRCLE_PULL_REQUEST##*/}
-            if [[ -n ${PR_NUMBER} ]]
-            then
-            curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
-            chmod +x jq
-            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$PR_NUMBER"
-            target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | ./jq '.base.ref' | tr -d '"')
-            echo $target_branch
-            fi
-
-      - run:
-          name: log branch
-          command: |
-            echo $target_branch
+      #       PR_NUMBER=${CIRCLE_PULL_REQUEST##*/}
+      #       if [[ -n ${PR_NUMBER} ]]
+      #       then
+      #       curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
+      #       chmod +x jq
+      #       url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$PR_NUMBER"
+      #       target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | ./jq '.base.ref' | tr -d '"')
+      #       echo $target_branch
+      #       fi
 
   ios_build:
     macos:
@@ -194,9 +189,9 @@ workflows:
   node-prepare-w:
     jobs:
       - node-prepare
-      # - ios_build:
-      #     requires:
-      #       - node-prepare
+      - ios_build:
+          requires:
+            - node-prepare
       # - android-build:
       #     app_env: dev
       #     requires:
