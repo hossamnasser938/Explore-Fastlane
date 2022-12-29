@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  macos: circleci/macos@2
+
 jobs:
   node-prepare:
     working_directory: ~/project
@@ -9,6 +12,75 @@ jobs:
     steps:
       - checkout:
           path: ~/project
+
+      # - restore_cache:
+      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+
+      # - restore_cache:
+      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+
+      # - run: yarn install
+
+      # - save_cache:
+      #     key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
+      #     paths:
+      #       - ~/.cache/yarn
+
+      # - save_cache:
+      #     key: node-v1-{{ checksum "package.json" }}-{{ arch }}
+      #     paths:
+      #       - node_modules
+
+      # - run:
+      #     name: jest tests
+      #     command: |
+      #       mkdir -p test-results/jest
+      #       yarn run test
+      #     environment:
+      #       JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+
+      # - persist_to_workspace:
+      #     root: ~/project
+      #     paths:
+      #       - node_modules
+
+      # - store_test_results:
+      #     path: test-results
+
+      # - store_artifacts:
+      #     path: test-results
+
+      - run:
+          name: get branch
+          command: |
+            PR_NUMBER=${CIRCLE_PULL_REQUEST##*/}
+            if [[ -n ${PR_NUMBER} ]]
+            then
+            curl -L "https://github.com/stedolan/jq/releases/download/jq-1.5/jq-linux64" -o jq
+            chmod +x jq
+            url="https://api.github.com/repos/hossamnasser938/Explore-Fastlane/pulls/$PR_NUMBER"
+            target_branch=$(curl $url --header 'access_token: $DANGER_GITHUB_API_TOKEN' | ./jq '.base.ref' | tr -d '"')
+            echo $target_branch
+            fi
+
+      - run:
+          name: log branch
+          command: |
+            echo $target_branch
+
+  ios_build:
+    macos:
+      xcode: '13.1.0'
+    working_directory: ~/project
+    steps:
+      - macos/switch-ruby:
+          version: '3.0.2'
+
+      - checkout:
+          path: ~/project
+
+      - attach_workspace:
+          at: ~/project
 
       - restore_cache:
           key: yarn-v1-{{ checksum "yarn.lock" }}-{{ arch }}
@@ -28,24 +100,42 @@ jobs:
           paths:
             - node_modules
 
+      - restore_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
+
+      - run: gem install bundler
+
       - run:
-          name: jest tests
-          command: |
-            mkdir -p test-results/jest
-            yarn run test
-          environment:
-            JEST_JUNIT_OUTPUT: test-results/jest/junit.xml
+          command: bundle install
+          working_directory: ios
 
-      - persist_to_workspace:
-          root: ~/project
+      - save_cache:
+          key: bundle-v1-{{ checksum "ios/Gemfile.lock" }}-{{ arch }}
           paths:
-            - node_modules
+            - vendor/bundle
 
-      - store_test_results:
-          path: test-results
+      - restore_cache:
+          key: pods-v1-{{ checksum "ios/Podfile" }}-{{ checksum "ios/Podfile.lock" }}-{{ arch }}
 
-      - store_artifacts:
-          path: test-results
+      - run:
+          name: cocoapods
+          command: bundle exec pod install
+          working_directory: ~/project/ios
+
+      - save_cache:
+          key: pods-v1-{{ checksum "ios/Podfile" }}-{{ checksum "ios/Podfile.lock" }}-{{ arch }}
+          paths:
+            - ios/Pods
+
+      - run:
+          name: build locally
+          command: bundle exec fastlane local_build
+          working_directory: ~/project/ios
+
+      # - run:
+      #     name: danger
+      #     command: bundle exec danger --verbose
+      #     working_directory: ~/project/ios
 
   android-build:
     working_directory: ~/project/android
@@ -99,13 +189,18 @@ jobs:
           name: build android and deploy to app distribution
           command: |
             bundle exec fastlane env_build_and_deliver env:<< parameters.app_env >>
-      - store_artifacts:
-          path: app/build/outputs/apk/release
 
 workflows:
   node-prepare-w:
     jobs:
       - node-prepare
+      # - ios_build:
+      #     requires:
+      #       - node-prepare
+      # - android-build:
+      #     app_env: dev
+      #     requires:
+      #       - node-prepare
 
   android-build-dev:
     jobs:
@@ -160,4 +255,4 @@ workflows:
               only: /^BUILD_PROD.*/
             branches:
               ignore: /.*/
-# VS Code Extension Version: 1.4.0
+# VS Code Extension Version: 1.5.0

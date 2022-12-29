@@ -1,0 +1,3 @@
+appetize_url_file = File.open("fastlane/appetize_url.txt")
+appetize_url_file_content = appetize_url_file.read
+message("appetize url = " + appetize_url_file_content)

@@ -1,0 +1,55 @@
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    setup_circle_ci
+    Dotenv.load ".env"
+  end
+
+  desc "create app"
+  lane :create_app do
+    produce
+  end
+
+  desc "clone certificates and provisioning profiles required"
+  lane :setup_code_signing do
+    match(app_identifier: ["com.cicd.explorefastlane", "com.cicd.explorefastlane.dev", "com.cicd.explorefastlane.stg"])
+  end
+
+  lane :tests do
+    run_tests(workspace: "ExplreFastLane.xcworkspace",
+              scheme: "ExplreFastLane")
+  end
+
+  desc "upload ipa t appetize"
+  lane :build_upload_to_appetize do
+    xcodebuild(
+      workspace: "ExplreFastlane.xcworkspace",
+      scheme: "dev",
+      configuration: "DevRelease",
+      sdk: 'iphonesimulator',
+      build: true,
+    )
+
+    dir_path = Dir.glob("/Users/*/Library/Developer/Xcode/DerivedData/ExplreFastLane*/Build/Products/DevRelease-iphonesimulator").at(0)
+    app_path = File.join(dir_path, "ExplreFastLane.app")
+    UI.message("App path: #{app_path}")
+    UI.user_error!("Couldn't find app") unless app_path
+    zipped_bundle = zip(path: app_path, output_path: File.join(__dir__, "Result.zip"))
+    appetize(path: zipped_bundle)
+    url = appetize_viewing_url_generator(scale: "75", color: "black")
+    appetize_url_file = File.new("appetize_url.txt", "w")
+    appetize_url_file.puts(url)
+    appetize_url_file.close
+    UI.message("Generated URL: #{url}")
+  end
+
+  desc "Build locally"
+  lane :local_build do
+    #setup_code_signing
+    #gym
+    build_upload_to_appetize
+    #danger
+    #firebase_app_distribution(firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"])
+  end
+end

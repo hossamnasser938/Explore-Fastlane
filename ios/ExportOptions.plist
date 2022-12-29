@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>compileBitcode</key>
+    <false/>
+    <key>method</key>
+    <string>ad-hoc</string>
+    <key>provisioningProfiles</key> 
+    <dict> 
+        <key>com.cicd.explorefastlane</key> 
+        <string>match AdHoc com.cicd.explorefastlane</string>
+        <key>com.cicd.explorefastlane.dev</key> 
+        <string>match AdHoc com.cicd.explorefastlane.dev</string>
+        <key>com.cicd.explorefastlane.stg</key> 
+        <string>match AdHoc com.cicd.explorefastlane.stg</string>
+    </dict>
+</dict>
+</plist>
