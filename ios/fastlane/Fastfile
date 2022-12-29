@@ -22,8 +22,17 @@ platform :ios do
   end
 
   desc "upload ipa t appetize"
-  lane :upload_to_appetize do
-    app_path = File.join(__dir__, "ExplreFastLane.ipa")
+  lane :build_upload_to_appetize do
+    xcodebuild(
+      workspace: "ExplreFastlane.xcworkspace",
+      scheme: "dev",
+      configuration: "DevRelease",
+      sdk: 'iphonesimulator',
+      build: true,
+    )
+
+    dir_path = Dir.glob("/Users/*/Library/Developer/Xcode/DerivedData/ExplreFastLane*/Build/Products/DevRelease-iphonesimulator").at(0)
+    app_path = File.join(dir_path, "ExplreFastLane.app")
     UI.message("App path: #{app_path}")
     UI.user_error!("Couldn't find app") unless app_path
     zipped_bundle = zip(path: app_path, output_path: File.join(__dir__, "Result.zip"))
@@ -37,10 +46,10 @@ platform :ios do
 
   desc "Build locally"
   lane :local_build do
-    setup_code_signing
-    gym
-    #upload_to_appetize
+    #setup_code_signing
+    #gym
+    build_upload_to_appetize
     #danger
-    firebase_app_distribution(firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"])
+    #firebase_app_distribution(firebase_cli_token: ENV["FIREBASE_CLI_TOKEN"])
   end
 end
